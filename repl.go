@@ -3,6 +3,7 @@ package main
 import (
 	"bufio"
 	"fmt"
+	"github.com/seancampbell3161/pokedex/internal/pokeapi"
 	"os"
 )
 
@@ -13,15 +14,12 @@ type cliCommand struct {
 }
 
 type config struct {
-	next     string
-	previous *string
+	pokeapiClient pokeapi.Client
+	next          *string
+	previous      *string
 }
 
-func startRepl() {
-	endpoints := config{
-		next:     "https://pokeapi.co/api/v2/location-area/",
-		previous: nil,
-	}
+func startRepl(cfg *config) {
 	commands := map[string]cliCommand{
 		"help": {
 			name:        "help",
@@ -48,29 +46,28 @@ func startRepl() {
 
 	for {
 		fmt.Print("Pokedex > ")
-
 		scanner.Scan()
 
 		for scanner.Scan() {
 			switch st := scanner.Text(); st {
 			case "help":
-				err := commands["help"].callback(&endpoints)
+				err := commands["help"].callback(cfg)
 				if err != nil {
 					fmt.Printf("%v\n", err)
 				}
 			case "exit":
-				err := commands["exit"].callback(&endpoints)
+				err := commands["exit"].callback(cfg)
 				if err != nil {
 					fmt.Printf("%v\n", err)
 				}
 				return
 			case "map":
-				err := commands["map"].callback(&endpoints)
+				err := commands["map"].callback(cfg)
 				if err != nil {
 					fmt.Printf("%v\n", err)
 				}
 			case "mapb":
-				err := commands["mapb"].callback(&endpoints)
+				err := commands["mapb"].callback(cfg)
 				if err != nil {
 					fmt.Printf("%v\n\n", err)
 				}
