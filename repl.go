@@ -9,14 +9,19 @@ import (
 type cliCommand struct {
 	name        string
 	description string
-	callback    func() error
+	callback    func(*config) error
 }
 
-func (c cliCommand) executeCommand() {
-
+type config struct {
+	next     string
+	previous *string
 }
 
 func startRepl() {
+	endpoints := config{
+		next:     "https://pokeapi.co/api/v2/location-area/",
+		previous: nil,
+	}
 	commands := map[string]cliCommand{
 		"help": {
 			name:        "help",
@@ -49,16 +54,26 @@ func startRepl() {
 		for scanner.Scan() {
 			switch st := scanner.Text(); st {
 			case "help":
-				err := commands["help"].callback()
+				err := commands["help"].callback(&endpoints)
 				if err != nil {
 					fmt.Printf("%v\n", err)
 				}
 			case "exit":
-				err := commands["exit"].callback()
+				err := commands["exit"].callback(&endpoints)
 				if err != nil {
 					fmt.Printf("%v\n", err)
 				}
 				return
+			case "map":
+				err := commands["map"].callback(&endpoints)
+				if err != nil {
+					fmt.Printf("%v\n", err)
+				}
+			case "mapb":
+				err := commands["mapb"].callback(&endpoints)
+				if err != nil {
+					fmt.Printf("%v\n\n", err)
+				}
 			}
 			fmt.Print("Pokedex > ")
 		}

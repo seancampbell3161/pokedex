@@ -1,5 +1,5 @@
 package main
 
-func exitCommand() error {
+func exitCommand(*config) error {
 	return nil
 }
