@@ -5,12 +5,13 @@ import (
 	"fmt"
 	"github.com/seancampbell3161/pokedex/internal/pokeapi"
 	"os"
+	"strings"
 )
 
 type cliCommand struct {
 	name        string
 	description string
-	callback    func(*config) error
+	callback    func(*config, *string) error
 }
 
 type config struct {
@@ -27,11 +28,14 @@ func startRepl(cfg *config) {
 		fmt.Print("Pokedex > ")
 		scanner.Scan()
 
+		userInput := scanner.Text()
+		splitWords := strings.Split(userInput, " ")
+
 		for scanner.Scan() {
 			if scanner.Text() == "exit" {
 				return
 			}
-			err := commands[scanner.Text()].callback(cfg)
+			err := commands[splitWords[0]].callback(cfg, &splitWords[1])
 			if err != nil {
 				fmt.Println(err)
 			}
@@ -61,6 +65,11 @@ func getCommands() map[string]cliCommand {
 			name:        "mapb",
 			description: "Goes back to the previous locations names",
 			callback:    mapbCommand,
+		},
+		"explore": {
+			name:        "explore",
+			description: "Explore the area for pokemon",
+			callback:    exploreCommand,
 		},
 	}
 }
