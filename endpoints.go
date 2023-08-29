@@ -10,6 +10,9 @@ func mapCommand(config *config) error {
 		return err
 	}
 
+	config.next = locations.Next
+	config.previous = locations.Previous
+
 	for _, location := range locations.Results {
 		fmt.Printf("%v\n", location.Name)
 	}
@@ -21,6 +24,9 @@ func mapbCommand(config *config) error {
 	if err != nil {
 		return err
 	}
+
+	config.next = locations.Next
+	config.previous = locations.Previous
 
 	for _, location := range locations.Results {
 		fmt.Printf("%v\n", location.Name)

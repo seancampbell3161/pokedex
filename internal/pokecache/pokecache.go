@@ -1,7 +1,6 @@
 package pokecache
 
 import (
-	"fmt"
 	"sync"
 	"time"
 )
@@ -21,7 +20,7 @@ func NewCache(interval time.Duration) Cache {
 		make(map[string]cacheEntry),
 		&sync.Mutex{},
 	}
-	newCache.reapLoop(interval)
+	go newCache.reapLoop(interval)
 	return newCache
 }
 
@@ -30,15 +29,16 @@ func (c *Cache) AddToCache(key string, val []byte) {
 	defer c.mu.Unlock()
 
 	c.entries[key] = cacheEntry{time.Now(), val}
-	fmt.Println("Added to cache")
 }
 
 func (c *Cache) GetCache(key string) ([]byte, bool) {
 	c.mu.Lock()
 	defer c.mu.Unlock()
-
 	cacheItem, ok := c.entries[key]
-	fmt.Println("Retrieved cache")
+	if len(cacheItem.value) == 0 {
+		ok = false
+	}
+
 	return cacheItem.value, ok
 }
 

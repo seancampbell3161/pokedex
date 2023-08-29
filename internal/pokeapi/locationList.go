@@ -7,19 +7,19 @@ import (
 )
 
 func (c *Client) GetLocations(url *string) (LocationAreas, error) {
-	finalUrl := "https://pokeapi.co/api/v2/location-area/"
+	finalUrl := "https://pokeapi.co/api/v2/location-area/?offset=0&limit=20"
 	if url != nil {
 		finalUrl = *url
 	}
-
+	//fmt.Println(finalUrl)
 	locations := LocationAreas{}
 
 	if val, ok := c.cache.GetCache(finalUrl); ok {
-
 		err := json.Unmarshal(val, &locations)
 		if err != nil {
 			return locations, err
 		}
+		return locations, nil
 	} else {
 		res, err := http.Get(finalUrl)
 
@@ -35,6 +35,10 @@ func (c *Client) GetLocations(url *string) (LocationAreas, error) {
 		if err != nil {
 			return locations, err
 		}
+
+		c.cache.AddToCache(finalUrl, body)
+
+		return locations, nil
 	}
 
 	return locations, nil
