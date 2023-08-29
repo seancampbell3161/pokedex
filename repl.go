@@ -20,7 +20,28 @@ type config struct {
 }
 
 func startRepl(cfg *config) {
-	commands := map[string]cliCommand{
+	commands := getCommands()
+	scanner := bufio.NewScanner(os.Stdin)
+
+	for {
+		fmt.Print("Pokedex > ")
+		scanner.Scan()
+
+		for scanner.Scan() {
+			if scanner.Text() == "exit" {
+				return
+			}
+			err := commands[scanner.Text()].callback(cfg)
+			if err != nil {
+				fmt.Println(err)
+			}
+			fmt.Print("Pokedex > ")
+		}
+	}
+}
+
+func getCommands() map[string]cliCommand {
+	return map[string]cliCommand{
 		"help": {
 			name:        "help",
 			description: "Displays a help message",
@@ -41,38 +62,5 @@ func startRepl(cfg *config) {
 			description: "Goes back to the previous locations names",
 			callback:    mapbCommand,
 		},
-	}
-	scanner := bufio.NewScanner(os.Stdin)
-
-	for {
-		fmt.Print("Pokedex > ")
-		scanner.Scan()
-
-		for scanner.Scan() {
-			switch st := scanner.Text(); st {
-			case "help":
-				err := commands["help"].callback(cfg)
-				if err != nil {
-					fmt.Printf("%v\n", err)
-				}
-			case "exit":
-				err := commands["exit"].callback(cfg)
-				if err != nil {
-					fmt.Printf("%v\n", err)
-				}
-				return
-			case "map":
-				err := commands["map"].callback(cfg)
-				if err != nil {
-					fmt.Printf("%v\n", err)
-				}
-			case "mapb":
-				err := commands["mapb"].callback(cfg)
-				if err != nil {
-					fmt.Printf("%v\n\n", err)
-				}
-			}
-			fmt.Print("Pokedex > ")
-		}
 	}
 }
