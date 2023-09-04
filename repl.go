@@ -31,15 +31,21 @@ func startRepl(cfg *config) {
 		userInput := scanner.Text()
 		splitWords := strings.Split(userInput, " ")
 
-		for scanner.Scan() {
-			if scanner.Text() == "exit" {
-				return
-			}
+		if scanner.Text() == "exit" {
+			return
+		}
+		if len(splitWords) > 1 {
 			err := commands[splitWords[0]].callback(cfg, &splitWords[1])
 			if err != nil {
 				fmt.Println(err)
 			}
-			fmt.Print("Pokedex > ")
+		} else {
+			fmt.Println(splitWords[0])
+			err := commands[splitWords[0]].callback(cfg, &splitWords[0])
+
+			if err != nil {
+				fmt.Println(err)
+			}
 		}
 	}
 }
