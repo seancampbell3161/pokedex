@@ -40,7 +40,6 @@ func startRepl(cfg *config) {
 				fmt.Println(err)
 			}
 		} else {
-			fmt.Println(splitWords[0])
 			err := commands[splitWords[0]].callback(cfg, &splitWords[0])
 
 			if err != nil {
