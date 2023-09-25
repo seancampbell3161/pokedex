@@ -4,7 +4,7 @@ import (
 	"fmt"
 )
 
-func exploreCommand(cfg *config, areaName *string) error {
+func exploreCommand(cfg *config, areaName *string, commands *map[string]cliCommand) error {
 	baseUrl := "https://pokeapi.co/api/v2/location-area/"
 
 	locationArea, err := cfg.pokeapiClient.GetPokemonList(baseUrl, areaName)

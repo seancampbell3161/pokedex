@@ -2,7 +2,7 @@ package main
 
 import "fmt"
 
-func inspectCommand(cfg *config, pokemonName *string) error {
+func inspectCommand(cfg *config, pokemonName *string, commands *map[string]cliCommand) error {
 	pokemon, ok := cfg.pokedexEntries[*pokemonName]
 	if !ok {
 		fmt.Println("You have not caught this pokemon")

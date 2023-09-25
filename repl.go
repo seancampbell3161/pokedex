@@ -11,7 +11,7 @@ import (
 type cliCommand struct {
 	name        string
 	description string
-	callback    func(*config, *string) error
+	callback    func(*config, *string, *map[string]cliCommand) error
 }
 
 type config struct {
@@ -32,20 +32,24 @@ func startRepl(cfg *config) {
 		userInput := scanner.Text()
 		splitWords := strings.Split(userInput, " ")
 
-		if scanner.Text() == "exit" {
-			return
-		}
-		if len(splitWords) > 1 {
-			err := commands[splitWords[0]].callback(cfg, &splitWords[1])
-			if err != nil {
-				fmt.Println(err)
+		if _, ok := commands[splitWords[0]]; ok {
+			if scanner.Text() == "exit" {
+				return
+			}
+			if len(splitWords) > 1 {
+				err := commands[splitWords[0]].callback(cfg, &splitWords[1], &commands)
+				if err != nil {
+					fmt.Println(err)
+				}
+			} else {
+				err := commands[splitWords[0]].callback(cfg, &splitWords[0], &commands)
+
+				if err != nil {
+					fmt.Println(err)
+				}
 			}
 		} else {
-			err := commands[splitWords[0]].callback(cfg, &splitWords[0])
-
-			if err != nil {
-				fmt.Println(err)
-			}
+			fmt.Println("command not recognized")
 		}
 	}
 }

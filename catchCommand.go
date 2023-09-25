@@ -3,7 +3,7 @@ package main
 import "fmt"
 import "math/rand"
 
-func catchCommand(cfg *config, pokemon *string) error {
+func catchCommand(cfg *config, pokemon *string, commands *map[string]cliCommand) error {
 	fmt.Printf("throwing a pokeball at %v...\n", *pokemon)
 
 	value, err := cfg.pokeapiClient.GetPokemonInfo(pokemon)

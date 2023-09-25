@@ -11,7 +11,7 @@ func (c *Client) GetLocations(url *string) (LocationAreas, error) {
 	if url != nil {
 		finalUrl = *url
 	}
-	//fmt.Println(finalUrl)
+
 	locations := LocationAreas{}
 
 	if val, ok := c.cache.GetCache(finalUrl); ok {

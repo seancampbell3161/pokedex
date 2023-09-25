@@ -2,7 +2,7 @@ package main
 
 import "fmt"
 
-func pokedexCommand(cfg *config, s *string) error {
+func pokedexCommand(cfg *config, s *string, commands *map[string]cliCommand) error {
 	fmt.Println("Your pokedex:")
 
 	if len(cfg.pokedexEntries) == 0 {
